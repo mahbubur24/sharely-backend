@@ -139,7 +139,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\ashik\\Desktop\\sharely-social-blog\\backend\\src\\generated\\prisma",
+      "value": "F:\\Development\\IC\\projects\\sharely-backend\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -153,7 +153,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\ashik\\Desktop\\sharely-social-blog\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "F:\\Development\\IC\\projects\\sharely-backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -167,12 +167,11 @@ const config = {
     "db"
   ],
   "activeProvider": "mongodb",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": null
+        "value": "mongodb+srv://mahbubur24:mongo123456@mahbubur24.3zodfwk.mongodb.net/sharely"
       }
     }
   },

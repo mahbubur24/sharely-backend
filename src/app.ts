@@ -2,7 +2,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Request, Response } from "express";
 import morgan from "morgan";
-import router from "./routes";
+import routes from "./routes/route-controller";
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-app.use(router);
+app.use(routes);
 
 app.use(/(.*)/, (req: Request, res: Response) => {
   res.status(404).json({ message: "Route not found" });

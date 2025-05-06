@@ -1,19 +1,22 @@
-import dotenv from "dotenv";
 import app from "./app";
-import connectDataBase from "./config/db";
+import { prisma } from "./prisma-client/prisma";
 
-dotenv.config();
+const PORT = process.env.PORT || 8000;
 
-connectDataBase()
-  .then(() => {
-    app.listen(process.env.SERVER_PORT || 8080, () => {
-      console.log(
-        `Server is running at http://localhost:${process.env.SERVER_PORT}`
-      );
-      console.log(`Server is running at PORT:${process.env.SERVER_PORT}`);
+async function startServer() {
+  try {
+    // Connect to the database
+    await prisma.$connect();
+    console.log("Connected to Database successfully");
+
+    // Start the server only after DB is connected
+    app.listen(PORT, () => {
+      console.log(` Server running on http://localhost:${PORT}`);
     });
-  })
-  .catch((error) => {
-    console.error(`MongoDB connection failed: ${error}`);
+  } catch (error) {
+    console.error(" Failed to connect to the database:", error);
     process.exit(1);
-  });
+  }
+}
+
+startServer();
