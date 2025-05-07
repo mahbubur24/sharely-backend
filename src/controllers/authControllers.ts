@@ -56,23 +56,24 @@ export const registerUser = asyncHandler(
         },
       });
 
-      const verificationCode = await generateVerificationCode(user);
+      // const verificationCode = await generateVerificationCode(user);
 
-      const userData = await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          verificationCode,
-          verificationCodeExpires: new Date(Date.now() + 5 * 60 * 1000),
-        },
-      });
+      // const userData = await prisma.user.update({
+      //   where: { id: user.id },
+      //   data: {
+      //     verificationCode,
+      //     verificationCodeExpires: new Date(Date.now() + 5 * 60 * 1000),
+      //   },
+      // });
 
-      // Send verification code without sending a response here
-      await sendVerificationCode(verificationCode, email, user);
+      // // Send verification code without sending a response here
+      // await sendVerificationCode(verificationCode, email, user);
 
       // Send success response after sending email
       const response = new apiResponse(
         201,
-        userData,
+        // userData,
+        user,
         "User created successfully"
       );
       res.status(response.statusCode).json({
@@ -209,12 +210,12 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     throw new apiError(401, "Invalid credentials");
   }
 
-  if (!user.accountVerified) {
-    throw new apiError(
-      403,
-      "Account not verified. Please verify your account."
-    );
-  }
+  // if (!user.accountVerified) {
+  //   throw new apiError(
+  //     403,
+  //     "Account not verified. Please verify your account."
+  //   );
+  // }
 
   await sendToken(user, 200, "User logged in successfully", res);
 });
@@ -239,14 +240,14 @@ export const logoutUser = asyncHandler(
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
   const user = res.locals.user;
 
-  if (!user) {
-    throw new apiError(401, "User not found");
-  }
+  // if (!user) {
+  //   throw new apiError(401, "User not found");
+  // }
 
   const response = new apiResponse(200, user, "User fetched successfully");
 
   res.status(response.statusCode).json({
-    success: response.success,
+    success: true,
     message: response.message,
     data: response.data,
   });
