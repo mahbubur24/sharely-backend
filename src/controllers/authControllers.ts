@@ -1,12 +1,12 @@
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import apiError from "../error/apiError";
 import apiResponse from "../error/apiResponse";
 import asyncHandler from "../error/asyncHandler";
+import { prisma } from "../prisma-client/prisma";
 import { sendEmail } from "../utils/sendEmail";
 import { sendToken } from "../utils/sendToken";
-const prisma = new PrismaClient();
 
 export const registerUser = asyncHandler(
   async (req: Request, res: Response) => {
@@ -238,8 +238,11 @@ export const logoutUser = asyncHandler(
 );
 
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
-  const user = res.locals.user;
+  // const user = res.locals.user;
 
+  const user = (await prisma.user.findUnique({
+    where: { email: req.body.email },
+  })) ?? { id: "123456" };
   // if (!user) {
   //   throw new apiError(401, "User not found");
   // }
