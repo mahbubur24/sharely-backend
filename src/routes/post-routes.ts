@@ -1,10 +1,11 @@
 import express from "express";
 import multer from "multer";
 import { createPost } from "../controllers/post-controller";
+import { upload } from "../middlewares/image-upload-multer";
 
 const postRoutes = express.Router();
 
-const upload = multer({ dest: "uploads/" });
+
 postRoutes.post("/create", upload.array("images"), createPost);
 
 export { postRoutes };
