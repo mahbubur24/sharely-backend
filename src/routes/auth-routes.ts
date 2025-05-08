@@ -1,9 +1,11 @@
 import express from "express";
 import {
+  forgotPassword,
   getUser,
   loginUser,
   logoutUser,
   registerUser,
+  resetPassword,
   verifyOTP,
 } from "../controllers/authControllers";
 import { isAuthenticated } from "../middlewares/authMiddlewares";
@@ -14,6 +16,8 @@ authRoutes.post("/signup", registerUser);
 authRoutes.post("/verifyOTP", verifyOTP);
 authRoutes.post("/login", loginUser);
 authRoutes.post("/logout", isAuthenticated, logoutUser);
-authRoutes.post("/getUser",isAuthenticated, getUser);
+authRoutes.get("/getUser", isAuthenticated, getUser);
+authRoutes.post("/forgotPassword", forgotPassword);
+authRoutes.put("/resetPassword/:token", resetPassword);
 
 export { authRoutes };

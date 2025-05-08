@@ -1,10 +1,12 @@
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { NextFunction, Request, Response } from "express";
 import apiError from "../error/apiError";
 import apiResponse from "../error/apiResponse";
 import asyncHandler from "../error/asyncHandler";
-import { User } from "../generated/prisma";
-import { prisma } from "../prisma-client/prisma";
+import { User } from "../generated/prisma"; // type
+import { prisma } from "../prisma-client/prisma"; // methode
+import { generateResetPasswordToken } from "../utils/generateResetToken";
 import { sendEmail } from "../utils/sendEmail";
 import { sendToken } from "../utils/sendToken";
 
@@ -56,24 +58,23 @@ export const registerUser = asyncHandler(
         },
       });
 
-      // const verificationCode = await generateVerificationCode(user);
+      const verificationCode = await generateVerificationCode(user);
 
-      // const userData = await prisma.user.update({
-      //   where: { id: user.id },
-      //   data: {
-      //     verificationCode,
-      //     verificationCodeExpires: new Date(Date.now() + 5 * 60 * 1000),
-      //   },
-      // });
+      const userData = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          verificationCode,
+          verificationCodeExpires: new Date(Date.now() + 5 * 60 * 1000),
+        },
+      });
 
-      // // Send verification code without sending a response here
-      // await sendVerificationCode(verificationCode, email, user);
+      // Send verification code without sending a response here
+      await sendVerificationCode(verificationCode, email, user);
 
       // Send success response after sending email
       const response = new apiResponse(
         201,
-        // userData,
-        user,
+        userData,
         "User created successfully"
       );
       res.status(response.statusCode).json({
@@ -210,12 +211,12 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     throw new apiError(401, "Invalid credentials");
   }
 
-  // if (!user.accountVerified) {
-  //   throw new apiError(
-  //     403,
-  //     "Account not verified. Please verify your account."
-  //   );
-  // }
+  if (!user.accountVerified) {
+    throw new apiError(
+      403,
+      "Account not verified. Please verify your account."
+    );
+  }
 
   await sendToken(user, 200, "User logged in successfully", res);
 });
@@ -240,9 +241,6 @@ export const logoutUser = asyncHandler(
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
   const user = res.locals.user;
 
-  // const user = (await prisma.user.findUnique({
-  //   where: { email: req.body.email },
-  // })) ?? { id: "123456" };
   if (!user) {
     throw new apiError(401, "User not found");
   }
@@ -250,8 +248,99 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
   const response = new apiResponse(200, user, "User fetched successfully");
 
   res.status(response.statusCode).json({
-    success: true,
+    success: response.success,
     message: response.message,
     data: response.data,
   });
+});
+
+export const forgotPassword = asyncHandler(
+  async (req: Request, res: Response) => {
+    const email = req.body.email;
+
+    const user = await prisma.user.findUnique({
+      where: { email: req.body.email, accountVerified: true },
+    });
+
+    if (!user) {
+      throw new apiError(400, "User not found");
+    }
+
+    const { resetToken, hashedToken, expiry } = generateResetPasswordToken();
+
+    console.log("Token :", resetToken);
+    // Update user with hashed token and expiry
+    await prisma.user.update({
+      where: { email: req.body.email },
+      data: {
+        resetPasswordToken: hashedToken,
+        resetPasswordTokenExpires: expiry,
+      },
+    });
+    const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetPasswordUrl} \n\n If you did not request this, please ignore this email and your password will remain unchanged.`;
+
+    try {
+      await sendEmail(email, "Password Reset Token", message);
+
+      const response = new apiResponse(
+        200,
+        {
+          user,
+          resetToken,
+        },
+        "Reset password token sent to your email."
+      );
+      res.status(response.statusCode).json(response);
+    } catch (error) {
+      // Cleanup on failure
+      await prisma.user.update({
+        where: { email },
+        data: {
+          resetPasswordToken: null,
+          resetPasswordTokenExpires: null,
+        },
+      });
+
+      throw new apiError(500, "Error sending email. Please try again later.");
+    }
+  }
+);
+
+export const resetPassword = asyncHandler(async (req, res, next) => {
+  const { token } = req.params;
+  const { password, confirmPassword } = req.body;
+
+  const hashedToken = crypto.createHash("sha512").update(token).digest("hex");
+
+  const user = await prisma.user.findFirst({
+    where: {
+      resetPasswordToken: hashedToken,
+      resetPasswordTokenExpires: {
+        gt: new Date(),
+      },
+    },
+  });
+
+  if (!user) {
+    throw new apiError(400, "Invalid or expired reset token.");
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    throw new apiError(400, "Passwords do not match.");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Update user's password and clear reset token fields
+  const updatedUser = await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      password: hashedPassword,
+      resetPasswordToken: null,
+      resetPasswordTokenExpires: null,
+    },
+  });
+  sendToken(updatedUser, 200, "Password reset successful", res);
 });
