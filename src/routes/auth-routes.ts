@@ -14,6 +14,6 @@ authRoutes.post("/signup", registerUser);
 authRoutes.post("/verifyOTP", verifyOTP);
 authRoutes.post("/login", loginUser);
 authRoutes.post("/logout", isAuthenticated, logoutUser);
-authRoutes.post("/getUser", getUser);
+authRoutes.post("/getUser",isAuthenticated, getUser);
 
 export { authRoutes };

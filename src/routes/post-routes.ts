@@ -8,4 +8,6 @@ const postRoutes = express.Router();
 
 postRoutes.post("/create", upload.array("images"), createPost);
 
+postRoutes.post("/check", upload.array("images"), createPost);
+
 export { postRoutes };

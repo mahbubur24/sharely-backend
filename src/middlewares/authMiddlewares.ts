@@ -1,13 +1,14 @@
-import { PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import apiError from "../error/apiError";
 import asyncHandler from "../error/asyncHandler";
-const prisma = new PrismaClient();
+import { prisma } from "../prisma-client/prisma";
 
 export const isAuthenticated = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { token } = req.cookies;
+    console.log({ token });
+
     if (!token) {
       throw new apiError(400, "User not logged in");
     }
