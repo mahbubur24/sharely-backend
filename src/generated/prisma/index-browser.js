@@ -134,7 +134,9 @@ exports.Prisma.ProfileScalarFieldEnum = {
   userId: 'userId',
   phone: 'phone',
   bio: 'bio',
-  gender: 'gender'
+  gender: 'gender',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PostScalarFieldEnum = {
@@ -142,7 +144,49 @@ exports.Prisma.PostScalarFieldEnum = {
   title: 'title',
   content: 'content',
   slug: 'slug',
-  categories: 'categories'
+  categories: 'categories',
+  comments: 'comments',
+  active: 'active',
+  authorId: 'authorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CategoriesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  postIds: 'postIds',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  postId: 'postId',
+  userId: 'userId',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LikeScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  count: 'count',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DislikeScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  count: 'count',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -159,7 +203,11 @@ exports.Prisma.QueryMode = {
 exports.Prisma.ModelName = {
   User: 'User',
   Profile: 'Profile',
-  Post: 'Post'
+  Post: 'Post',
+  Categories: 'Categories',
+  Comment: 'Comment',
+  Like: 'Like',
+  Dislike: 'Dislike'
 };
 
 /**

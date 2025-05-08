@@ -15,10 +15,10 @@ datasource db {
 }
 
 model User {
-  id                        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name                      String
-  email                     String    @unique
-  password                  String
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
+  password String
 
   active                    Boolean   @default(true)
   accountVerified           Boolean   @default(false)
@@ -32,18 +32,15 @@ model User {
   postIds                   String[]
 }
 
-enum Role {
-  ADMIN
-  SUPERADMIN
-}
-
 model Profile {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  user   User    @relation(fields: [userId], references: [id])
-  userId String  @unique @db.ObjectId
-  phone  String?
-  bio    String?
-  gender String?
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique @db.ObjectId
+  phone     String?
+  bio       String?
+  gender    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Post {
@@ -52,4 +49,48 @@ model Post {
   content    String
   slug       String
   categories String[]
+  comments   String[]
+  active     Boolean  @default(true)
+  authorId   String?  @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Categories {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  postIds   String[]
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+  postId  String  @db.ObjectId
+  userId  String  @db.ObjectId
+  active  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  userId    String[]
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Dislike {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  userId    String[]
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

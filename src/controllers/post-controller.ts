@@ -17,12 +17,14 @@ export async function createPost(req: Request, res: Response): Promise<any> {
       slug: slug,
       content: content,
       categories: modifiedCategories,
+      authorId: res.locals.user.id,
     },
   });
 
   console.log({ newPost });
+  const result = res.locals.user;
+  console.log({ result });
 
-  const result = req.body;
   return sendResponse(res, {
     success: true,
     message: "welcome",
