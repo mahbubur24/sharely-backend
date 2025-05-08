@@ -32,3 +32,24 @@ export const createComment = asyncHandler(
     });
   }
 );
+
+export const getComment = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const comment = await prisma.comment.findMany({
+      where: { postId: req.params.postId },
+    });
+
+    const response = new apiResponse(
+      200,
+      comment,
+      "comment fetched successfully"
+    );
+    res.status(response.statusCode).json({
+      success: response.success,
+      message: response.message,
+      data: response.data,
+    });
+  } catch (error) {
+    throw new apiError(400, "Can't fetch comment");
+  }
+});
