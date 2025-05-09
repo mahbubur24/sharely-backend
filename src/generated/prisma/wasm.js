@@ -135,6 +135,7 @@ exports.Prisma.ProfileScalarFieldEnum = {
   phone: 'phone',
   bio: 'bio',
   gender: 'gender',
+  imageUrl: 'imageUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -148,6 +149,7 @@ exports.Prisma.PostScalarFieldEnum = {
   comments: 'comments',
   active: 'active',
   authorId: 'authorId',
+  images: 'images',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

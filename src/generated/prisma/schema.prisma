@@ -15,11 +15,10 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  email    String @unique
-  password String
-
+  id                        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                      String
+  email                     String    @unique
+  password                  String
   active                    Boolean   @default(true)
   accountVerified           Boolean   @default(false)
   verificationCode          Int?
@@ -39,6 +38,7 @@ model Profile {
   phone     String?
   bio       String?
   gender    String?
+  imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -52,6 +52,7 @@ model Post {
   comments   String[]
   active     Boolean  @default(true)
   authorId   String?  @db.ObjectId
+  images     String[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -66,12 +67,11 @@ model Categories {
 }
 
 model Comment {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  content String
-  postId  String  @db.ObjectId
-  userId  String  @db.ObjectId
-  active  Boolean @default(true)
-
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  postId    String   @db.ObjectId
+  userId    String   @db.ObjectId
+  active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

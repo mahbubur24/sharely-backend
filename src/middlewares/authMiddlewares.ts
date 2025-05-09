@@ -6,6 +6,8 @@ import { prisma } from "../prisma-client/prisma";
 
 export const isAuthenticated = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.cookies);
+
     const { token } = req.cookies;
     console.log({ token });
 

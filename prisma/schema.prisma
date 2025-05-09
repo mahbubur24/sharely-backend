@@ -19,7 +19,6 @@ model User {
   name     String
   email    String @unique
   password String
-
   active                    Boolean   @default(true)
   accountVerified           Boolean   @default(false)
   verificationCode          Int?
@@ -39,6 +38,7 @@ model Profile {
   phone     String?
   bio       String?
   gender    String?
+  imageUrl String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -52,9 +52,9 @@ model Post {
   comments   String[]
   active     Boolean  @default(true)
   authorId   String?  @db.ObjectId
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  images     String[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Categories {
@@ -72,7 +72,6 @@ model Comment {
   postId  String  @db.ObjectId
   userId  String  @db.ObjectId
   active  Boolean @default(true)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

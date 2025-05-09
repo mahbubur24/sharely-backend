@@ -2501,6 +2501,7 @@ export namespace Prisma {
     phone: string | null
     bio: string | null
     gender: string | null
+    imageUrl: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2511,6 +2512,7 @@ export namespace Prisma {
     phone: string | null
     bio: string | null
     gender: string | null
+    imageUrl: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2521,6 +2523,7 @@ export namespace Prisma {
     phone: number
     bio: number
     gender: number
+    imageUrl: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2533,6 +2536,7 @@ export namespace Prisma {
     phone?: true
     bio?: true
     gender?: true
+    imageUrl?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2543,6 +2547,7 @@ export namespace Prisma {
     phone?: true
     bio?: true
     gender?: true
+    imageUrl?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2553,6 +2558,7 @@ export namespace Prisma {
     phone?: true
     bio?: true
     gender?: true
+    imageUrl?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2636,6 +2642,7 @@ export namespace Prisma {
     phone: string | null
     bio: string | null
     gender: string | null
+    imageUrl: string | null
     createdAt: Date
     updatedAt: Date
     _count: ProfileCountAggregateOutputType | null
@@ -2663,6 +2670,7 @@ export namespace Prisma {
     phone?: boolean
     bio?: boolean
     gender?: boolean
+    imageUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2676,11 +2684,12 @@ export namespace Prisma {
     phone?: boolean
     bio?: boolean
     gender?: boolean
+    imageUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "phone" | "bio" | "gender" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "phone" | "bio" | "gender" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
   export type ProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2696,6 +2705,7 @@ export namespace Prisma {
       phone: string | null
       bio: string | null
       gender: string | null
+      imageUrl: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["profile"]>
@@ -3096,6 +3106,7 @@ export namespace Prisma {
     readonly phone: FieldRef<"Profile", 'String'>
     readonly bio: FieldRef<"Profile", 'String'>
     readonly gender: FieldRef<"Profile", 'String'>
+    readonly imageUrl: FieldRef<"Profile", 'String'>
     readonly createdAt: FieldRef<"Profile", 'DateTime'>
     readonly updatedAt: FieldRef<"Profile", 'DateTime'>
   }
@@ -3527,6 +3538,7 @@ export namespace Prisma {
     comments: number
     active: number
     authorId: number
+    images: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -3564,6 +3576,7 @@ export namespace Prisma {
     comments?: true
     active?: true
     authorId?: true
+    images?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3650,6 +3663,7 @@ export namespace Prisma {
     comments: string[]
     active: boolean
     authorId: string | null
+    images: string[]
     createdAt: Date
     updatedAt: Date
     _count: PostCountAggregateOutputType | null
@@ -3680,6 +3694,7 @@ export namespace Prisma {
     comments?: boolean
     active?: boolean
     authorId?: boolean
+    images?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["post"]>
@@ -3695,11 +3710,12 @@ export namespace Prisma {
     comments?: boolean
     active?: boolean
     authorId?: boolean
+    images?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "slug" | "categories" | "comments" | "active" | "authorId" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
+  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "slug" | "categories" | "comments" | "active" | "authorId" | "images" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
 
   export type $PostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Post"
@@ -3713,6 +3729,7 @@ export namespace Prisma {
       comments: string[]
       active: boolean
       authorId: string | null
+      images: string[]
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["post"]>
@@ -4115,6 +4132,7 @@ export namespace Prisma {
     readonly comments: FieldRef<"Post", 'String[]'>
     readonly active: FieldRef<"Post", 'Boolean'>
     readonly authorId: FieldRef<"Post", 'String'>
+    readonly images: FieldRef<"Post", 'String[]'>
     readonly createdAt: FieldRef<"Post", 'DateTime'>
     readonly updatedAt: FieldRef<"Post", 'DateTime'>
   }
@@ -8333,6 +8351,7 @@ export namespace Prisma {
     phone: 'phone',
     bio: 'bio',
     gender: 'gender',
+    imageUrl: 'imageUrl',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8349,6 +8368,7 @@ export namespace Prisma {
     comments: 'comments',
     active: 'active',
     authorId: 'authorId',
+    images: 'images',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8598,6 +8618,7 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Profile"> | string | null
     bio?: StringNullableFilter<"Profile"> | string | null
     gender?: StringNullableFilter<"Profile"> | string | null
+    imageUrl?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -8609,6 +8630,7 @@ export namespace Prisma {
     phone?: SortOrder
     bio?: SortOrder
     gender?: SortOrder
+    imageUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -8623,6 +8645,7 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Profile"> | string | null
     bio?: StringNullableFilter<"Profile"> | string | null
     gender?: StringNullableFilter<"Profile"> | string | null
+    imageUrl?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -8634,6 +8657,7 @@ export namespace Prisma {
     phone?: SortOrder
     bio?: SortOrder
     gender?: SortOrder
+    imageUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProfileCountOrderByAggregateInput
@@ -8650,6 +8674,7 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     bio?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     gender?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    imageUrl?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
   }
@@ -8666,6 +8691,7 @@ export namespace Prisma {
     comments?: StringNullableListFilter<"Post">
     active?: BoolFilter<"Post"> | boolean
     authorId?: StringNullableFilter<"Post"> | string | null
+    images?: StringNullableListFilter<"Post">
     createdAt?: DateTimeFilter<"Post"> | Date | string
     updatedAt?: DateTimeFilter<"Post"> | Date | string
   }
@@ -8679,6 +8705,7 @@ export namespace Prisma {
     comments?: SortOrder
     active?: SortOrder
     authorId?: SortOrder
+    images?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -8695,6 +8722,7 @@ export namespace Prisma {
     comments?: StringNullableListFilter<"Post">
     active?: BoolFilter<"Post"> | boolean
     authorId?: StringNullableFilter<"Post"> | string | null
+    images?: StringNullableListFilter<"Post">
     createdAt?: DateTimeFilter<"Post"> | Date | string
     updatedAt?: DateTimeFilter<"Post"> | Date | string
   }, "id">
@@ -8708,6 +8736,7 @@ export namespace Prisma {
     comments?: SortOrder
     active?: SortOrder
     authorId?: SortOrder
+    images?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PostCountOrderByAggregateInput
@@ -8727,6 +8756,7 @@ export namespace Prisma {
     comments?: StringNullableListFilter<"Post">
     active?: BoolWithAggregatesFilter<"Post"> | boolean
     authorId?: StringNullableWithAggregatesFilter<"Post"> | string | null
+    images?: StringNullableListFilter<"Post">
     createdAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
   }
@@ -9085,6 +9115,7 @@ export namespace Prisma {
     phone?: string | null
     bio?: string | null
     gender?: string | null
+    imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutProfileInput
@@ -9096,6 +9127,7 @@ export namespace Prisma {
     phone?: string | null
     bio?: string | null
     gender?: string | null
+    imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9104,6 +9136,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProfileNestedInput
@@ -9114,6 +9147,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9124,6 +9158,7 @@ export namespace Prisma {
     phone?: string | null
     bio?: string | null
     gender?: string | null
+    imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9132,6 +9167,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9141,6 +9177,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9154,6 +9191,7 @@ export namespace Prisma {
     comments?: PostCreatecommentsInput | string[]
     active?: boolean
     authorId?: string | null
+    images?: PostCreateimagesInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9167,6 +9205,7 @@ export namespace Prisma {
     comments?: PostCreatecommentsInput | string[]
     active?: boolean
     authorId?: string | null
+    images?: PostCreateimagesInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9179,6 +9218,7 @@ export namespace Prisma {
     comments?: PostUpdatecommentsInput | string[]
     active?: BoolFieldUpdateOperationsInput | boolean
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: PostUpdateimagesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9191,6 +9231,7 @@ export namespace Prisma {
     comments?: PostUpdatecommentsInput | string[]
     active?: BoolFieldUpdateOperationsInput | boolean
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: PostUpdateimagesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9204,6 +9245,7 @@ export namespace Prisma {
     comments?: PostCreatecommentsInput | string[]
     active?: boolean
     authorId?: string | null
+    images?: PostCreateimagesInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9216,6 +9258,7 @@ export namespace Prisma {
     comments?: PostUpdatecommentsInput | string[]
     active?: BoolFieldUpdateOperationsInput | boolean
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: PostUpdateimagesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9228,6 +9271,7 @@ export namespace Prisma {
     comments?: PostUpdatecommentsInput | string[]
     active?: BoolFieldUpdateOperationsInput | boolean
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: PostUpdateimagesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9715,6 +9759,7 @@ export namespace Prisma {
     phone?: SortOrder
     bio?: SortOrder
     gender?: SortOrder
+    imageUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9725,6 +9770,7 @@ export namespace Prisma {
     phone?: SortOrder
     bio?: SortOrder
     gender?: SortOrder
+    imageUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9735,6 +9781,7 @@ export namespace Prisma {
     phone?: SortOrder
     bio?: SortOrder
     gender?: SortOrder
+    imageUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9748,6 +9795,7 @@ export namespace Prisma {
     comments?: SortOrder
     active?: SortOrder
     authorId?: SortOrder
+    images?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10016,12 +10064,21 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type PostCreateimagesInput = {
+    set: string[]
+  }
+
   export type PostUpdatecategoriesInput = {
     set?: string[]
     push?: string | string[]
   }
 
   export type PostUpdatecommentsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type PostUpdateimagesInput = {
     set?: string[]
     push?: string | string[]
   }
@@ -10274,6 +10331,7 @@ export namespace Prisma {
     phone?: string | null
     bio?: string | null
     gender?: string | null
+    imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10283,6 +10341,7 @@ export namespace Prisma {
     phone?: string | null
     bio?: string | null
     gender?: string | null
+    imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10307,6 +10366,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10315,6 +10375,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

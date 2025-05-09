@@ -10,6 +10,12 @@ export async function createPost(req: Request, res: Response): Promise<any> {
 
   const images = req.files as Express.Multer.File[];
   console.log({ modifiedCategories });
+  console.log({ images });
+  console.log(typeof images);
+
+  const postImages = images.map((file) => {
+    return file.filename;
+  });
 
   const newPost = await prisma.post.create({
     data: {
@@ -18,12 +24,28 @@ export async function createPost(req: Request, res: Response): Promise<any> {
       content: content,
       categories: modifiedCategories,
       authorId: res.locals.user.id,
+      images: postImages,
     },
   });
 
+  await prisma.user.update({
+    where: {
+      id: res.locals.user.id,
+    },
+    data: {
+      postIds: {
+        push: newPost.id,
+      },
+    },
+  });
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: res.locals.user.id,
+    },
+  });
   console.log({ newPost });
-  const result = res.locals.user;
-  console.log({ result });
+  console.log({ user });
 
   return sendResponse(res, {
     success: true,

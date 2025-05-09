@@ -16,16 +16,16 @@ export const sendToken = async (
       expiresIn: String(process.env.JWT_EXPIRES_IN),
     }
   );
-  console.log("JWT secret kry : ", process.env.JWT_SECRET_KEY);
-  console.log("JWT expires in : ", process.env.JWT_EXPIRES_IN);
-  console.log("Token generated:", token);
+  // console.log("JWT secret kry : ", process.env.JWT_SECRET_KEY);
+  // console.log("JWT expires in : ", process.env.JWT_EXPIRES_IN);
+  // console.log("Token generated:", token);
 
   res
     .status(statusCode)
     .cookie("token", token, {
       expires: new Date(
         Date.now() +
-          Number(process.env.JWT_COOKIE_EXPIRES) * 24 * 60 * 60 * 1000
+          Number(process.env.JWT_COOKIE_EXPIRES) * 60 * 60 * 60 * 1000
       ),
       httpOnly: true,
     })

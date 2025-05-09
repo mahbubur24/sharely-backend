@@ -223,6 +223,8 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
 
 export const logoutUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log("logout clicked");
+    
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
