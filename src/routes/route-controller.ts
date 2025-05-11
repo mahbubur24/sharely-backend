@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 
 import { authRoutes } from "./auth-routes";
 import { categoryRoutes } from "./category-routes";
@@ -15,5 +15,8 @@ routes.use("/api/v1/category", categoryRoutes);
 routes.use("/api/v1/comment", commentRoutes);
 routes.use("/api/v1/like", likeRoutes);
 routes.use("/api/v1/dislike", disLikeRoutes);
+routes.use("/test", (_req: Request, res: Response) => {
+  res.send("Welcome to sharely blog");
+});
 
 export default routes;
