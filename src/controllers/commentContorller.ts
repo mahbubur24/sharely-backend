@@ -15,8 +15,8 @@ export const createComment = asyncHandler(
     const newComment = await prisma.comment.create({
       data: {
         content: comment,
-        postId: postId,
-        userId: res.locals.user.id,
+        Post: { connect: postId },
+        Author: { connect: res.locals.user.id },
       },
     });
 
@@ -33,23 +33,24 @@ export const createComment = asyncHandler(
   }
 );
 
-export const getComment = asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const comment = await prisma.comment.findMany({
-      where: { postId: req.params.postId },
+export const deleteComment = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.body;
+
+    await prisma.comment.update({
+      where: {
+        id: id,
+      },
+      data: {
+        active: false,
+      },
     });
 
-    const response = new apiResponse(
-      200,
-      comment,
-      "comment fetched successfully"
-    );
+    const response = new apiResponse(200, "Comment deleted successfully");
     res.status(response.statusCode).json({
       success: response.success,
       message: response.message,
       data: response.data,
     });
-  } catch (error) {
-    throw new apiError(400, "Can't fetch comment");
   }
-});
+);

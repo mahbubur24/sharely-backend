@@ -1,6 +1,6 @@
-
+import { User } from "@prisma/client";
 import { Response } from "express";
-import { User } from "../generated/prisma";
+
 const jwt = require("jsonwebtoken");
 
 export const sendToken = async (

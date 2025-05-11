@@ -7,70 +7,239 @@ export async function createPost(req: Request, res: Response): Promise<any> {
   const { title, slug, content, categories } = req.body;
   const modifiedCategories =
     typeof categories === "string" ? [categories] : categories;
+  console.log({ modifiedCategories });
 
   const images = req.files as Express.Multer.File[];
   console.log({ modifiedCategories });
   console.log({ images });
   console.log(typeof images);
 
-  const postImages = images.map((file) => {
-    return file.filename;
-  });
+  try {
+    const postImages = images.map((file) => {
+      return file.filename;
+    });
 
-  const newPost = await prisma.post.create({
-    data: {
-      title: title,
-      slug: slug,
-      content: content,
-      categories: modifiedCategories,
-      authorId: res.locals.user.id,
-      images: postImages,
-    },
-  });
+    let newSlug = slug;
 
-  await prisma.user.update({
-    where: {
-      id: res.locals.user.id,
-    },
-    data: {
-      postIds: {
-        push: newPost.id,
+    let suffix = (await prisma.post.count()) ?? 1;
+    console.log({ suffix });
+
+    newSlug = `${slug}-${suffix++}`;
+    while (true) {
+      const existing = await prisma.post.findUnique({
+        where: { slug: newSlug },
+      });
+
+      if (!existing) break;
+
+      newSlug = `${slug}-${suffix++}`;
+    }
+    console.log({ newSlug });
+
+    const newPost = await prisma.post.create({
+      data: {
+        title: title,
+        slug: newSlug,
+        content: content,
+        images: postImages,
+        Author: { connect: { id: res.locals.user.id } }, // authorId = logged-in user ID
+        PostCategories: {
+          create: modifiedCategories.map((categoryId: string) => ({
+            Category: { connect: { id: categoryId } },
+          })),
+        },
       },
-    },
-  });
+    });
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: res.locals.user.id,
+    return sendResponse(res, {
+      success: true,
+      data: newPost,
+      message: "welcome",
+    });
+  } catch (error) {
+    console.log({ error });
+
+    return sendResponse(res, {
+      success: false,
+      message: "Post Create Failled",
+    });
+  }
+}
+
+export async function allPost(_: Request, res: Response): Promise<any> {
+  try {
+    const allPost = await prisma.post.findMany({
+      include: {
+        Author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        PostCategories: true,
+        Comments: true,
+        Likes: true,
+        Dislikes: true,
+      },
+    });
+    console.log(allPost[0].Author);
+    
+    return sendResponse(res, {
+      success: true,
+      data: allPost,
+      message: "All post fetched successfully",
+    });
+  } catch (error) {
+    return sendResponse(res, {
+      success: false,
+
+      message: "Something went wrong",
+    });
+  }
+}
+
+export async function updatePost(req: Request, res: Response): Promise<any> {
+  //  Send success response after sending email
+  const { title, slug, content, categories } = req.body;
+  const modifiedCategories =
+    typeof categories === "string" ? [categories] : categories;
+
+  const images = req.files as Express.Multer.File[];
+  console.log({ modifiedCategories });
+  console.log({ images });
+  console.log(typeof images);
+
+  try {
+    const postImages = images.map((file) => {
+      return file.filename;
+    });
+    let newSlug = slug;
+
+    let suffix = (await prisma.post.count()) ?? 1;
+    while (true) {
+      const existing = await prisma.post.findUnique({
+        where: { slug: newSlug },
+      });
+
+      if (!existing) break;
+
+      newSlug = `${slug}-${suffix++}`;
+    }
+
+    const updatedPost = await prisma.post.update({
+      where: { id: req.body.id },
+      data: {
+        title: title,
+        slug: newSlug,
+        content: content,
+        images: postImages,
+        Author: { connect: { id: res.locals.user.id } }, // authorId = logged-in user ID
+        PostCategories: {
+          create: modifiedCategories.map((categoryId: string) => ({
+            category: { connect: { id: categoryId } },
+          })),
+        },
+      },
+    });
+
+    return sendResponse(res, {
+      success: true,
+      data: updatedPost,
+      message: "welcome",
+    });
+  } catch (error) {
+    return sendResponse(res, {
+      success: false,
+      message: "update post failled",
+    });
+  }
+}
+
+export async function deletePost(req: Request, res: Response): Promise<any> {
+  //  Send success response after sending email
+  const { id } = req.body;
+
+  const updatedPost = await prisma.post.update({
+    where: { id: id },
+    data: {
+      active: false,
     },
   });
-  console.log({ newPost });
-  console.log({ user });
 
   return sendResponse(res, {
     success: true,
+    data: updatedPost,
     message: "welcome",
   });
 }
 
-// export async function check(req: Request, res: Response): Promise<any> {
-//   //  Send success response after sending email
-//   const { title, postSlug, content, categories } = req.body;
+export async function userAllPost(req: Request, res: Response): Promise<any> {
+  const { id } = req.body;
+  try {
+    const allPost = await prisma.post.findMany({
+      where: {
+        authorId: id,
+      },
+      include: {
+        Author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        PostCategories: true,
+        Comments: true,
+        Likes: true,
+        Dislikes: true,
+      },
+    });
 
-//   const images = req.files as Express.Multer.File[];
-//   console.log({ title, postSlug, content, categories, images });
+    return sendResponse(res, {
+      success: true,
+      data: allPost,
+      message: "All post fetched successfully",
+    });
+  } catch (error) {
+    return sendResponse(res, {
+      success: false,
 
-//   const user = prisma.user.findFirst({
-//     where: {
-//       email: "mahbubur2421@gmail.com",
-//     },
-//   });
+      message: "Something went wrong",
+    });
+  }
+}
 
-//   console.log({ user });
+export async function singlePost(req: Request, res: Response): Promise<any> {
+  const { slug } = req.body;
+  console.log({slug});
+  
+  try {
+    const post = await prisma.post.findFirst({
+      where: {
+        slug: slug,
+      },
+      include: {
+        Author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        PostCategories: true,
+        Comments: true,
+        Likes: true,
+        Dislikes: true,
+      },
+    });
 
-//   const result = req.body;
-//   return sendResponse(res, {
-//     success: true,
-//     message: "welcome",
-//   });
-// }
+    return sendResponse(res, {
+      success: true,
+      data: post,
+      message: "All post fetched successfully",
+    });
+  } catch (error) {
+    return sendResponse(res, {
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+}

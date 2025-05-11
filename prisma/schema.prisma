@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  // output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -15,63 +15,78 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  email    String @unique
-  password String
-  active                    Boolean   @default(true)
+  id                        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email                     String    @unique
+  password                  String
+  name                      String
+  role                      String    @default("user")
+  Profile                   Profile?
   accountVerified           Boolean   @default(false)
   verificationCode          Int?
   verificationCodeExpires   DateTime?
   resetPasswordToken        String?
   resetPasswordTokenExpires DateTime?
+  Posts                     Post[]
+  Comments                  Comment[]
+  Likes                     Like[]
+  Dislikes                  Dislike[]
   createdAt                 DateTime  @default(now())
   updatedAt                 DateTime  @updatedAt
-  Profile                   Profile?
-  postIds                   String[]
 }
 
 model Profile {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @unique @db.ObjectId
-  phone     String?
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
   bio       String?
-  gender    String?
-  imageUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  avatarUrl String?
+  phone     String?
+  userId    String  @unique @db.ObjectId
+  User      User    @relation(fields: [userId], references: [id])
 }
 
 model Post {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  title      String
-  content    String
-  slug       String
-  categories String[]
-  comments   String[]
-  active     Boolean  @default(true)
-  authorId   String?  @db.ObjectId
-  images     String[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  content        String
+  slug           String         @unique
+  images         String[]
+  active         Boolean        @default(true)
+  authorId       String         @db.ObjectId
+  Author         User           @relation(fields: [authorId], references: [id])
+  Comments       Comment[]
+  Likes          Like[]
+  Dislikes       Dislike[]
+  PostCategories PostCategory[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
-model Categories {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  postIds   String[]
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Category {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  name           String         @unique
+  active         Boolean        @default(true)
+  PostCategories PostCategory[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model PostCategory {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId     String   @db.ObjectId
+  categoryId String   @db.ObjectId
+  Post       Post     @relation(fields: [postId], references: [id])
+  Category   Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([postId, categoryId])
 }
 
 model Comment {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  content String
-  postId  String  @db.ObjectId
-  userId  String  @db.ObjectId
-  active  Boolean @default(true)
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  active    Boolean  @default(true)
+  postId    String   @db.ObjectId
+  authorId  String   @db.ObjectId
+  Post      Post     @relation(fields: [postId], references: [id])
+  Author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -79,17 +94,101 @@ model Comment {
 model Like {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   postId    String   @db.ObjectId
-  userId    String[]
-  count     Int      @default(0)
+  userId    String   @db.ObjectId
+  Post      Post     @relation(fields: [postId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  @@unique([postId, userId])
 }
 
 model Dislike {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   postId    String   @db.ObjectId
-  userId    String[]
-  count     Int      @default(0)
+  userId    String   @db.ObjectId
+  Post      Post     @relation(fields: [postId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  @@unique([postId, userId])
 }
+
+// model User {
+//   id                        String    @id @default(auto()) @map("_id") @db.ObjectId
+//   name                      String
+//   email                     String    @unique
+//   password                  String
+//   active                    Boolean   @default(true)
+//   accountVerified           Boolean   @default(false)
+//   verificationCode          Int?
+//   verificationCodeExpires   DateTime?
+//   resetPasswordToken        String?
+//   resetPasswordTokenExpires DateTime?
+//   createdAt                 DateTime  @default(now())
+//   updatedAt                 DateTime  @updatedAt
+//   Profile                   Profile?
+//   postIds                   String[]
+// }
+
+// model Profile {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   user      User     @relation(fields: [userId], references: [id])
+//   userId    String   @unique @db.ObjectId
+//   phone     String?
+//   bio       String?
+//   gender    String?
+//   imageUrl  String?
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model Post {
+//   id         String   @id @default(auto()) @map("_id") @db.ObjectId
+//   title      String
+//   content    String
+//   slug       String
+//   categories String[]
+//   comments   String[]
+//   active     Boolean  @default(true)
+//   authorId   String?  @db.ObjectId
+//   images     String[]
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+// }
+
+// model Categories {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   name      String
+//   postIds   String[]
+//   active    Boolean  @default(true)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model Comment {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   content   String
+//   postId    String   @db.ObjectId
+//   userId    String   @db.ObjectId
+//   active    Boolean  @default(true)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model Like {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   postId    String   @db.ObjectId
+//   userId    String[]
+//   count     Int      @default(0)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model Dislike {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   postId    String   @db.ObjectId
+//   userId    String[]
+//   count     Int      @default(0)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }

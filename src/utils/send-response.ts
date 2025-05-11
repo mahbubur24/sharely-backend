@@ -12,7 +12,7 @@ export function sendResponse<T>(
   res: Response,
   {
     success = true,
-    message = "",
+    message = "Something went wrong",
     data = null,
     errors = null,
     statusCode = 200,

@@ -3,8 +3,10 @@ import cors from "cors";
 import express, { Request, Response } from "express";
 import morgan from "morgan";
 import routes from "./routes/route-controller";
+import path from "path";
 
 const app = express();
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 app.use(morgan("dev"));
 app.use(express.json());

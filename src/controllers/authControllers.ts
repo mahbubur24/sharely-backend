@@ -4,11 +4,12 @@ import { NextFunction, Request, Response } from "express";
 import apiError from "../error/apiError";
 import apiResponse from "../error/apiResponse";
 import asyncHandler from "../error/asyncHandler";
-import { User } from "../generated/prisma"; // type
 import { prisma } from "../prisma-client/prisma"; // methode
 import { generateResetPasswordToken } from "../utils/generateResetToken";
 import { sendEmail } from "../utils/sendEmail";
 import { sendToken } from "../utils/sendToken";
+import { User } from "@prisma/client";
+
 
 export const registerUser = asyncHandler(
   async (req: Request, res: Response) => {
@@ -55,6 +56,11 @@ export const registerUser = asyncHandler(
           name,
           email,
           password: hashedPassword,
+          Profile: {
+            create: {
+              bio: "Hello, I am new here!",
+            },
+          },
         },
       });
 
@@ -224,7 +230,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
 export const logoutUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     console.log("logout clicked");
-    
+
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -345,4 +351,48 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
     },
   });
   sendToken(updatedUser, 200, "Password reset successful", res);
+});
+
+export const getUserData = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.body;
+
+  if (!id) {
+    throw new apiError(401, "User not found");
+  }
+
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      Profile: true,
+      Posts: {
+        include: {
+          PostCategories: {
+            include: {
+              Category: true, // Get category name etc.
+            },
+          },
+        },
+      },
+      Comments: {
+        include: {
+          Post: true, // Optional: to see which post comment belongs to
+        },
+      },
+      Likes: {
+        include: {
+          Post: true, // Optional: to get liked post details
+        },
+      },
+    },
+  });
+
+  const response = new apiResponse(200, userData, "User fetched successfully");
+
+  res.status(response.statusCode).json({
+    success: response.success,
+    message: response.message,
+    data: response.data,
+  });
 });
