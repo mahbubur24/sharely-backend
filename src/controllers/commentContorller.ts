@@ -62,14 +62,14 @@ export const deleteComment = asyncHandler(
 );
 
 export const allComment = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.body;
-  console.log({ id });
+  const { postId } = req.body;
+  console.log({ postId });
 
-  if (!id) return;
+  if (!postId) return;
   try {
     const comments = await prisma.comment.findMany({
       where: {
-        postId: id,
+        postId: postId,
       },
       include: {
         Author: {

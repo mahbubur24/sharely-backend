@@ -226,8 +226,12 @@ export async function singlePost(req: Request, res: Response): Promise<any> {
         },
         PostCategories: true,
         Comments: true,
-        Likes: true,
-        Dislikes: true,
+        _count: {
+          select: {
+            Likes: true,
+            Dislikes: true,
+          },
+        },
       },
     });
 
