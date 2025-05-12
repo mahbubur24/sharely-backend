@@ -1,6 +1,7 @@
 import express from "express";
 import {
   allPost,
+  categoryPost,
   createPost,
   deletePost,
   singlePost,
@@ -18,5 +19,6 @@ postRoutes.post("/update", isAuthenticated, upload.array("images"), updatePost);
 postRoutes.post("/delete", deletePost);
 postRoutes.get("/user-posts", userAllPost);
 postRoutes.post("/single", singlePost);
+postRoutes.post("/category", categoryPost);
 
 export { postRoutes };

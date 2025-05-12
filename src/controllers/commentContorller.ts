@@ -12,6 +12,7 @@ export const createComment = asyncHandler(
       throw new apiError(400, "comment is required");
     }
 
+  
     const newComment = await prisma.comment.create({
       data: {
         content: comment,

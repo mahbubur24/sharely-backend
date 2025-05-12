@@ -83,7 +83,7 @@ export async function allPost(_: Request, res: Response): Promise<any> {
       },
     });
     console.log(allPost[0].Author);
-    
+
     return sendResponse(res, {
       success: true,
       data: allPost,
@@ -210,8 +210,8 @@ export async function userAllPost(req: Request, res: Response): Promise<any> {
 
 export async function singlePost(req: Request, res: Response): Promise<any> {
   const { slug } = req.body;
-  console.log({slug});
-  
+  console.log({ slug });
+
   try {
     const post = await prisma.post.findFirst({
       where: {
@@ -234,6 +234,62 @@ export async function singlePost(req: Request, res: Response): Promise<any> {
     return sendResponse(res, {
       success: true,
       data: post,
+      message: "All post fetched successfully",
+    });
+  } catch (error) {
+    return sendResponse(res, {
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+}
+
+export async function categoryPost(req: Request, res: Response): Promise<any> {
+  const { category } = req.body;
+
+  try {
+    // const posts = await prisma.post.findMany({
+    //   where: {
+    //     PostCategories: {
+    //       some: {
+    //         Category: {
+    //           name: category,
+
+    //         },
+    //       },
+    //     },
+    //   },
+    //   include: {
+    //     Author: true,
+    //     Comments: true,
+    //     Likes: true,
+    //     Dislikes: true,
+    //     PostCategories: {
+    //       include: {
+    //         Category: true,
+    //       },
+    //     },
+    //   },
+    // });
+
+    const posts = await prisma.post.findMany({
+      include: {
+        PostCategories: {
+          include: {
+            Category: true,
+          },
+        },
+      },
+    });
+
+    const filteredPosts = posts?.filter((post) =>
+      post.PostCategories?.some(
+        (pc) => pc.Category.name?.toLowerCase() === category?.toLowerCase()
+      )
+    );
+    return sendResponse(res, {
+      success: true,
+      data: filteredPosts,
       message: "All post fetched successfully",
     });
   } catch (error) {

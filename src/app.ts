@@ -2,8 +2,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Request, Response } from "express";
 import morgan from "morgan";
-import routes from "./routes/route-controller";
 import path from "path";
+import routes from "./routes/route-controller";
 
 const app = express();
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
@@ -12,13 +12,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.use(routes);
 
