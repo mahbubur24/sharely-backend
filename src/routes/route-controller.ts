@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 
 import { authRoutes } from "./auth-routes";
 import { categoryRoutes } from "./category-routes";
-import { commentRoutes } from "./commentRoutes";
+import { commentRoutes } from "./comment-Routes";
 import { disLikeRoutes } from "./dis-like-routes";
 import { likeRoutes } from "./like-routes";
 import { postRoutes } from "./post-routes";

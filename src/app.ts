@@ -1,5 +1,5 @@
 import cookieParser from "cookie-parser";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import express, { Request, Response } from "express";
 import morgan from "morgan";
 import path from "path";
@@ -12,7 +12,32 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000",
+//     credentials: true,
+//   })
+// );
+
+const whitelist: string[] = [
+  "http://localhost:3000",
+  "https://sharely-backend.onrender.com",
+];
+
+// ✅ CORS options with origin as a function
+const corsOptions: CorsOptions = {
+  origin: (origin: string | undefined, callback) => {
+    if (!origin || whitelist.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+// ✅ Apply CORS middleware
+app.use(cors(corsOptions));
 
 app.use(routes);
 
