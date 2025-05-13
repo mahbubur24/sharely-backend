@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 const whitelist: string[] = [
   "http://localhost:3000",
-  "https://sharely-backend.onrender.com",
+  "https://sharely-sepia.vercel.app",
 ];
 
 // ✅ CORS options with origin as a function
