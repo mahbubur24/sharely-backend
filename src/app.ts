@@ -1,5 +1,5 @@
 import cookieParser from "cookie-parser";
-import cors, { CorsOptions } from "cors";
+import cors from "cors";
 import express, { Request, Response } from "express";
 import morgan from "morgan";
 import path from "path";
@@ -12,32 +12,32 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// app.use(
-//   cors({
-//     origin: "http://localhost:3000",
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: "https://sharely-sepia.vercel.app",
+    credentials: true,
+  })
+);
 
-const whitelist: string[] = [
-  "http://localhost:3000",
-  "https://sharely-sepia.vercel.app",
-];
+// const whitelist: string[] = [
+//   "http://localhost:3000",
+//   "https://sharely-sepia.vercel.app",
+// ];
 
-// ✅ CORS options with origin as a function
-const corsOptions: CorsOptions = {
-  origin: (origin: string | undefined, callback) => {
-    if (!origin || whitelist.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-};
+// // ✅ CORS options with origin as a function
+// const corsOptions: CorsOptions = {
+//   origin: (origin: string | undefined, callback) => {
+//     if (!origin || whitelist.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   credentials: true,
+// };
 
 // ✅ Apply CORS middleware
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use(routes);
 
